@@ -1,4 +1,4 @@
-package reports
+package types
 
 type Habit struct {
 	ID         int    `json:"ID"`
@@ -62,83 +62,4 @@ type AdminHabitsReport struct {
 	PerRange   Ranges     `json:"PerRange"`
 	WorstHabit HabitOwner `json:"WorstHabit"`
 	BestHabit  HabitOwner `json:"BestHabit"`
-}
-
-var sampleUserReport = UserReport{
-	GoodHabits: []Habit{
-		{
-			ID:         0,
-			UserID:     0,
-			Name:       "Good habit name",
-			HabitType:  0,
-			Difficulty: 0,
-			Score:      0,
-		},
-	},
-	BadHabits: []Habit{
-		{
-			ID:         0,
-			UserID:     0,
-			Name:       "Bad habit name",
-			HabitType:  0,
-			Difficulty: 0,
-			Score:      0,
-		},
-	},
-	TodayTasks: []Task{
-		{
-			ID:          0,
-			UserID:      0,
-			Title:       "Today task name",
-			Description: "Today task description",
-			Difficulty:  "Today task difficulty",
-			DueDate:     "Today task due date",
-			Reminder:    "Today task reminder",
-			Done:        true,
-		},
-	},
-	DelayedTasks: []Task{
-		{
-			ID:          0,
-			UserID:      0,
-			Title:       "Delayed task name",
-			Description: "Delayed task description",
-			Difficulty:  "Delayed task difficulty",
-			DueDate:     "Delayed task due date",
-			Reminder:    "Delayed task reminder",
-			Done:        true,
-		},
-	},
-}
-
-var sampleAdminTasksReport = AdminTasksReport{
-	Completed: CompletedTasks{
-		Total:  0,
-		Before: 0,
-		After:  0,
-	},
-	Delayed: 0,
-	Available: AvailableTasks{
-		Total:     0,
-		Remaining: 0,
-		ForToday:  0,
-	},
-}
-
-var sampleAdminHabitsReport = AdminHabitsReport{
-	PerRange: Ranges{
-		Red:    0,
-		Orange: 0,
-		Yellow: 0,
-		Green:  0,
-		Blue:   0,
-	},
-	WorstHabit: HabitOwner{
-		Name:     "Name Worst",
-		Username: "username_worst",
-	},
-	BestHabit: HabitOwner{
-		Name:     "Name Best",
-		Username: "username_best",
-	},
 }
