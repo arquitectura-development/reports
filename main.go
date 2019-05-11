@@ -131,7 +131,7 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 		}
 
 		tasks := []types.Task{}
-		getJson("https://taskservice.herokuapp.com/tasks", &tasks)
+		getJson("https://habittonapigateway.herokuapp.com/admin/tasks/?userId=0", &tasks)
 		log.Println(tasks)
 
 		w.Header().Set("Content-Type", "application/json")
