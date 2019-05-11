@@ -157,7 +157,11 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write(adminHabitsReportJSON)
 	}
+}
 
+func aliveHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write(http.StatusText(http.StatusOK))
 }
 
 func determineListenPort() (string, error) {
@@ -173,6 +177,7 @@ func main() {
 	r.HandleFunc("/users/reports", userReportHandler)
 	r.HandleFunc("/admin/reports/tasks", adminTasksReport)
 	r.HandleFunc("/admin/reports/habits", adminHabitsReport)
+	r.HandleFunc("/isAlive", aliveHandler)
 
 	port, err := determineListenPort()
 	if err != nil {
