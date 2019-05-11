@@ -90,7 +90,7 @@ var sampleAdminHabitsReport = types.AdminHabitsReport{
 	},
 }
 
-func getJson(url string, target interface{}) error {
+func getJSON(url string, target interface{}) error {
 	var myClient = &http.Client{Timeout: 10 * time.Second}
 	r, err := myClient.Get(url)
 	if err != nil {
@@ -102,13 +102,11 @@ func getJson(url string, target interface{}) error {
 }
 
 func userReportHandler(w http.ResponseWriter, r *http.Request) {
-	userId := r.URL.Query().Get("userId")
-	if userId == "" {
+	userID := r.URL.Query().Get("userId")
+	if userID == "" {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 	} else {
-		log.Println(userId)
-
 		userReportJSON, err := json.Marshal(sampleUserReport)
 		if err != nil {
 			log.Println(err)
@@ -121,21 +119,79 @@ func userReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminTasksReport(w http.ResponseWriter, r *http.Request) {
-	userId := r.URL.Query().Get("userId")
-	log.Println(userId)
-	if userId != "0" {
+	userID := r.URL.Query().Get("userId")
+	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 	} else {
-		adminTasksReportJSON, err := json.Marshal(sampleAdminTasksReport)
+
+		tasks := []types.Task{}
+		getJSON("https://habittonapigateway.herokuapp.com/admin/tasks/?userId=0", &tasks)
+		log.Println(tasks)
+
+		completedTotal := 0
+		completedBefore := 0
+		completedAfter := 0
+		delayed := 0
+		availableTotal := 0
+		availableRemainig := 0
+		availableForToday := 0
+
+		layout := "02/01/2006"
+		for _, task := range tasks {
+			todayDateString := time.Now().Format(layout)
+			todayDate, err := time.Parse(layout, todayDateString)
+			if err != nil {
+				log.Println(err)
+			}
+			dueDateString := task.DueDate
+			dueDate, err := time.Parse(layout, dueDateString)
+			if err != nil {
+				log.Println(err)
+			}
+
+			if task.Done {
+				completionDateString := task.CompletionDate
+				completionDate, err := time.Parse(layout, completionDateString)
+				if err != nil {
+					log.Println(err)
+				}
+
+				if completionDate.After(dueDate) || completionDate.Equal(dueDate) {
+					completedBefore++
+				} else {
+					completedAfter++
+				}
+				completedTotal++
+			} else if dueDate.Before(todayDate) {
+				delayed++
+			} else {
+				if dueDate.Equal(todayDate) {
+					availableForToday++
+				} else {
+					availableRemainig++
+				}
+				availableTotal++
+			}
+		}
+
+		var response = types.AdminTasksReport{
+			Completed: types.CompletedTasks{
+				Total:  completedTotal,
+				Before: completedBefore,
+				After:  completedAfter,
+			},
+			Delayed: delayed,
+			Available: types.AvailableTasks{
+				Total:     availableTotal,
+				Remaining: availableRemainig,
+				ForToday:  availableForToday,
+			},
+		}
+		adminTasksReportJSON, err := json.Marshal(response)
 		if err != nil {
 			log.Println(err)
 		}
-
-		tasks := []types.Task{}
-		getJson("https://habittonapigateway.herokuapp.com/admin/tasks/?userId=0", &tasks)
-		log.Println(tasks)
-
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(adminTasksReportJSON)
@@ -144,14 +200,18 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
-	userId := r.URL.Query().Get("userId")
-	if userId != "0" {
+	userID := r.URL.Query().Get("userId")
+	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
 	} else {
 		adminHabitsReportJSON, err := json.Marshal(sampleAdminHabitsReport)
 		if err != nil {
 			log.Println(err)
 		}
+
+		habits := []types.Habit{}
+		getJSON("https://arquitectura-habits.herokuapp.com/admin/habits?userId=0", &habits)
+		log.Println(habits)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
