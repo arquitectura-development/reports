@@ -122,8 +122,10 @@ func userReportHandler(w http.ResponseWriter, r *http.Request) {
 
 func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 	userId := r.URL.Query().Get("userId")
+	log.Println(userId)
 	if userId != "0" {
 		w.WriteHeader(http.StatusForbidden)
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 	} else {
 		adminTasksReportJSON, err := json.Marshal(sampleAdminTasksReport)
 		if err != nil {
