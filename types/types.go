@@ -10,14 +10,14 @@ type Habit struct {
 }
 
 type Task struct {
-	ID          int    `json:"ID"`
-	UserID      int    `json:"UserID"`
-	Title       string `json:"Title"`
-	Description string `json:"Description"`
-	Difficulty  string `json:"Difficulty"`
-	DueDate     string `json:"DueDate"`
-	Reminder    string `json:"Reminder"`
-	Done        bool   `json:"Done"`
+	ID          int    `json:"id"`
+	UserID      int    `json:"userID"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Difficulty  string `json:"difficulty"`
+	DueDate     string `json:"dueDate"`
+	Reminder    string `json:"reminder"`
+	Done        bool   `json:"done"`
 }
 
 type UserReport struct {

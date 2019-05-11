@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	types "arqui-reports/types"
 )
@@ -89,41 +90,72 @@ var sampleAdminHabitsReport = types.AdminHabitsReport{
 	},
 }
 
-func userReportHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userId := vars["userId"]
-	log.Println(userId)
-
-	userReportJSON, err := json.Marshal(sampleUserReport)
+func getJson(url string, target interface{}) error {
+	var myClient = &http.Client{Timeout: 10 * time.Second}
+	r, err := myClient.Get(url)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+	defer r.Body.Close()
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(userReportJSON)
+	return json.NewDecoder(r.Body).Decode(target)
+}
+
+func userReportHandler(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("userId")
+	if userId == "" {
+		w.WriteHeader(http.StatusForbidden)
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+	} else {
+		log.Println(userId)
+
+		userReportJSON, err := json.Marshal(sampleUserReport)
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(userReportJSON)
+	}
 }
 
 func adminTasksReport(w http.ResponseWriter, r *http.Request) {
-	adminTasksReportJSON, err := json.Marshal(sampleAdminTasksReport)
-	if err != nil {
-		log.Println(err)
+	userId := r.URL.Query().Get("userId")
+	if userId != "0" {
+		w.WriteHeader(http.StatusForbidden)
+	} else {
+		adminTasksReportJSON, err := json.Marshal(sampleAdminTasksReport)
+		if err != nil {
+			log.Println(err)
+		}
+
+		tasks := []types.Task{}
+		getJson("https://taskservice.herokuapp.com/tasks", &tasks)
+		log.Println(tasks)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(adminTasksReportJSON)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(adminTasksReportJSON)
 }
 
 func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
-	adminHabitsReportJSON, err := json.Marshal(sampleAdminHabitsReport)
-	if err != nil {
-		log.Println(err)
+	userId := r.URL.Query().Get("userId")
+	if userId != "0" {
+		w.WriteHeader(http.StatusForbidden)
+	} else {
+		adminHabitsReportJSON, err := json.Marshal(sampleAdminHabitsReport)
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(adminHabitsReportJSON)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(adminHabitsReportJSON)
 }
 
 func determineListenPort() (string, error) {
@@ -136,9 +168,9 @@ func determineListenPort() (string, error) {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/reports/users/{userId}", userReportHandler)
-	r.HandleFunc("/reports/admin/tasks", adminTasksReport)
-	r.HandleFunc("/reports/admin/habits", adminHabitsReport)
+	r.HandleFunc("/users/reports", userReportHandler)
+	r.HandleFunc("/admin/reports/tasks", adminTasksReport)
+	r.HandleFunc("/admin/reports/habits", adminHabitsReport)
 
 	port, err := determineListenPort()
 	if err != nil {
