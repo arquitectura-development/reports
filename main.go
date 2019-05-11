@@ -173,9 +173,9 @@ func determineListenPort() (string, error) {
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/users/reports/", userReportHandler)
-	r.HandleFunc("/admin/reports/tasks/", adminTasksReport)
-	r.HandleFunc("/admin/reports/habits/", adminHabitsReport)
+	r.HandleFunc("/users/reports", userReportHandler)
+	r.HandleFunc("/admin/reports/tasks", adminTasksReport)
+	r.HandleFunc("/admin/reports/habits", adminHabitsReport)
 	r.HandleFunc("/", aliveHandler)
 
 	port, err := determineListenPort()
