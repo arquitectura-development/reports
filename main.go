@@ -22,6 +22,7 @@ var sampleUserReport = types.UserReport{
 			HabitType:  0,
 			Difficulty: 0,
 			Score:      0,
+			Color:      0,
 		},
 	},
 	BadHabits: []types.Habit{
@@ -32,49 +33,34 @@ var sampleUserReport = types.UserReport{
 			HabitType:  0,
 			Difficulty: 0,
 			Score:      0,
+			Color:      0,
 		},
 	},
 	TodayTasks: []types.Task{
 		{
-			ID:          0,
-			UserID:      0,
-			Title:       "Today task name",
-			Description: "Today task description",
-			Difficulty:  "Today task difficulty",
-			DueDate:     "Today task due date",
-			Reminder:    "Today task reminder",
-			Done:        true,
+			ID:             0,
+			UserID:         0,
+			Title:          "Today task name",
+			Description:    "Today task description",
+			Difficulty:     "Today task difficulty",
+			DueDate:        "Today task due date",
+			CompletionDate: "Completion",
+			Reminder:       "Today task reminder",
+			Done:           true,
 		},
 	},
 	DelayedTasks: []types.Task{
 		{
-			ID:          0,
-			UserID:      0,
-			Title:       "Delayed task name",
-			Description: "Delayed task description",
-			Difficulty:  "Delayed task difficulty",
-			DueDate:     "Delayed task due date",
-			Reminder:    "Delayed task reminder",
-			Done:        true,
+			ID:             0,
+			UserID:         0,
+			Title:          "Delayed task name",
+			Description:    "Delayed task description",
+			Difficulty:     "Delayed task difficulty",
+			DueDate:        "Delayed task due date",
+			CompletionDate: "Completion",
+			Reminder:       "Delayed task reminder",
+			Done:           true,
 		},
-	},
-}
-
-var sampleAdminHabitsReport = types.AdminHabitsReport{
-	PerRange: types.Ranges{
-		Red:    0,
-		Orange: 0,
-		Yellow: 0,
-		Green:  0,
-		Blue:   0,
-	},
-	WorstHabit: types.HabitOwner{
-		Name:     "Name Worst",
-		Username: "username_worst",
-	},
-	BestHabit: types.HabitOwner{
-		Name:     "Name Best",
-		Username: "username_best",
 	},
 }
 
@@ -95,7 +81,56 @@ func userReportHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 	} else {
-		userReportJSON, err := json.Marshal(sampleUserReport)
+
+		tasks := []types.Task{}
+		getJSON("https://habittonapigateway.herokuapp.com/users/tasks?userId="+userID, &tasks)
+		habits := []types.Habit{}
+		getJSON("https://habittonapigateway.herokuapp.com/users/habits?userId="+userID, &habits)
+
+		goodHabits := []types.Habit{}
+		badHabits := []types.Habit{}
+		tasksToday := []types.Task{}
+		tasksDelayed := []types.Task{}
+
+		for _, habit := range habits {
+			if habit.Score >= 50 {
+				goodHabits = append(goodHabits, habit)
+			} else if habit.Score < 0 {
+				badHabits = append(badHabits, habit)
+			}
+		}
+
+		layout := "02/01/2006"
+		todayDateString := time.Now().Format(layout)
+		todayDate, err := time.Parse(layout, todayDateString)
+		if err != nil {
+			log.Panicln(err)
+		}
+		for _, task := range tasks {
+			if !task.Done {
+				dueDateString := task.DueDate
+				dueDate, err := time.Parse(layout, dueDateString)
+				if err != nil {
+					log.Panicln(err)
+				}
+
+				if dueDate.Equal(todayDate) {
+					tasksToday = append(tasksToday, task)
+				}
+				if dueDate.Before(todayDate) {
+					tasksDelayed = append(tasksDelayed, task)
+				}
+			}
+		}
+
+		var response = types.UserReport{
+			BadHabits:    badHabits,
+			GoodHabits:   goodHabits,
+			TodayTasks:   tasksToday,
+			DelayedTasks: tasksDelayed,
+		}
+
+		userReportJSON, err := json.Marshal(response)
 		if err != nil {
 			log.Panicln(err)
 		}
@@ -125,12 +160,13 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 		availableForToday := 0
 
 		layout := "02/01/2006"
+		todayDateString := time.Now().Format(layout)
+		todayDate, err := time.Parse(layout, todayDateString)
+		if err != nil {
+			log.Panicln(err)
+		}
 		for _, task := range tasks {
-			todayDateString := time.Now().Format(layout)
-			todayDate, err := time.Parse(layout, todayDateString)
-			if err != nil {
-				log.Panicln(err)
-			}
+
 			dueDateString := task.DueDate
 			dueDate, err := time.Parse(layout, dueDateString)
 			if err != nil {
@@ -246,8 +282,7 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		bestHabit := types.HabitOwner{}
 		if lowestScoreUserID != -1 {
 			userData := types.UserData{}
-			url := "https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId=" + strconv.Itoa(highestScoreUserID)
-			getJSON(url, &userData)
+			getJSON("https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId="+strconv.Itoa(highestScoreUserID), &userData)
 			bestHabit.Name = highestScoreName
 			bestHabit.Username = userData.Name
 		} else {
