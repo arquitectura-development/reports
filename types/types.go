@@ -23,10 +23,10 @@ type Task struct {
 }
 
 type UserReport struct {
-	GoodHabits   []Habit `json:"GoodHabits"`
-	BadHabits    []Habit `json:"BadHabits"`
-	TodayTasks   []Task  `json:"TodayTasks"`
-	DelayedTasks []Task  `json:"DelayedTasks"`
+	GoodHabits   []Habit `json:"goodHabits"`
+	BadHabits    []Habit `json:"badHabits"`
+	TodayTasks   []Task  `json:"todayTasks"`
+	DelayedTasks []Task  `json:"delayedTasks"`
 }
 
 type CompletedTasks struct {
