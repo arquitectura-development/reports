@@ -1,12 +1,13 @@
 package types
 
 type Habit struct {
-	ID         int    `json:"ID"`
-	UserID     int    `json:"UserID"`
-	Name       string `json:"Name"`
-	HabitType  int    `json:"HabitType"`
-	Difficulty int    `json:"Difficulty"`
-	Score      int    `json:"Score"`
+	ID         int    `json:"is"`
+	UserID     int    `json:"userId"`
+	Name       string `json:"name"`
+	HabitType  int    `json:"habitType"`
+	Difficulty int    `json:"difficulty"`
+	Score      int    `json:"score"`
+	Color      int    `json:"color"`
 }
 
 type Task struct {
@@ -29,38 +30,38 @@ type UserReport struct {
 }
 
 type CompletedTasks struct {
-	Total  int `json:"Total"`
-	Before int `json:"Before"`
-	After  int `json:"After"`
+	Total  int `json:"total"`
+	Before int `json:"before"`
+	After  int `json:"after"`
 }
 
 type AvailableTasks struct {
-	Total     int `json:"Total"`
-	Remaining int `json:"Remaining"`
-	ForToday  int `json:"ForToday"`
+	Total     int `json:"total"`
+	Remaining int `json:"remaining"`
+	ForToday  int `json:"forToday"`
 }
 
 type AdminTasksReport struct {
-	Completed CompletedTasks `json:"Completed"`
-	Delayed   int            `json:"Delayed"`
-	Available AvailableTasks `json:"Available"`
+	Completed CompletedTasks `json:"completed"`
+	Delayed   int            `json:"delayed"`
+	Available AvailableTasks `json:"available"`
 }
 
 type Ranges struct {
-	Red    int `json:"Red"`
-	Orange int `json:"Orange"`
-	Yellow int `json:"Yellow"`
-	Green  int `json:"Green"`
-	Blue   int `json:"Blue"`
+	Red    int `json:"red"`
+	Orange int `json:"orange"`
+	Yellow int `json:"yellow"`
+	Green  int `json:"green"`
+	Blue   int `json:"blue"`
 }
 
 type HabitOwner struct {
-	Name     string `json:"Name"`
-	Username string `json:"Username"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
 }
 
 type AdminHabitsReport struct {
-	PerRange   Ranges     `json:"PerRange"`
-	WorstHabit HabitOwner `json:"WorstHabit"`
-	BestHabit  HabitOwner `json:"BestHabit"`
+	PerRange   Ranges     `json:"perRange"`
+	WorstHabit HabitOwner `json:"worstHabit"`
+	BestHabit  HabitOwner `json:"bestHabit"`
 }

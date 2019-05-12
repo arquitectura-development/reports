@@ -58,20 +58,6 @@ var sampleUserReport = types.UserReport{
 	},
 }
 
-var sampleAdminTasksReport = types.AdminTasksReport{
-	Completed: types.CompletedTasks{
-		Total:  0,
-		Before: 0,
-		After:  0,
-	},
-	Delayed: 0,
-	Available: types.AvailableTasks{
-		Total:     0,
-		Remaining: 0,
-		ForToday:  0,
-	},
-}
-
 var sampleAdminHabitsReport = types.AdminHabitsReport{
 	PerRange: types.Ranges{
 		Red:    0,
