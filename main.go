@@ -97,7 +97,7 @@ func userReportHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		userReportJSON, err := json.Marshal(sampleUserReport)
 		if err != nil {
-			log.Println(err)
+			log.Panicln(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -115,7 +115,6 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 
 		tasks := []types.Task{}
 		getJSON("https://habittonapigateway.herokuapp.com/admin/tasks/?userId=0", &tasks)
-		log.Println(tasks)
 
 		completedTotal := 0
 		completedBefore := 0
@@ -130,19 +129,19 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 			todayDateString := time.Now().Format(layout)
 			todayDate, err := time.Parse(layout, todayDateString)
 			if err != nil {
-				log.Println(err)
+				log.Panicln(err)
 			}
 			dueDateString := task.DueDate
 			dueDate, err := time.Parse(layout, dueDateString)
 			if err != nil {
-				log.Println(err)
+				log.Panicln(err)
 			}
 
 			if task.Done {
 				completionDateString := task.CompletionDate
 				completionDate, err := time.Parse(layout, completionDateString)
 				if err != nil {
-					log.Println(err)
+					log.Panicln(err)
 				}
 
 				if completionDate.After(dueDate) || completionDate.Equal(dueDate) {
@@ -178,7 +177,7 @@ func adminTasksReport(w http.ResponseWriter, r *http.Request) {
 		}
 		adminTasksReportJSON, err := json.Marshal(response)
 		if err != nil {
-			log.Println(err)
+			log.Panicln(err)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -195,7 +194,6 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 
 		habits := []types.Habit{}
 		getJSON("https://arquitectura-habits.herokuapp.com/admin/habits?userId=0", &habits)
-		log.Println(habits)
 
 		countRed := 0
 		countOrange := 0
@@ -238,7 +236,6 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		if lowestScoreUserID != -1 {
 			userData := types.UserData{}
 			getJSON("https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId="+strconv.Itoa(lowestScoreUserID), &userData)
-			log.Println(userData)
 			worstHabit.Name = lowestScoreName
 			worstHabit.Username = userData.Name
 		} else {
@@ -250,9 +247,7 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		if lowestScoreUserID != -1 {
 			userData := types.UserData{}
 			url := "https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId=" + strconv.Itoa(highestScoreUserID)
-			log.Println(url)
 			getJSON(url, &userData)
-			log.Println(userData)
 			bestHabit.Name = highestScoreName
 			bestHabit.Username = userData.Name
 		} else {
@@ -274,7 +269,7 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 
 		adminHabitsReportJSON, err := json.Marshal(response)
 		if err != nil {
-			log.Println(err)
+			log.Panicln(err)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
