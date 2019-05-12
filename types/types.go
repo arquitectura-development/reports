@@ -1,8 +1,8 @@
 package types
 
 type Habit struct {
-	ID         int    `json:"is"`
-	UserID     int    `json:"userId"`
+	ID         int    `json:"id"`
+	UserID     int    `json:"userID"`
 	Name       string `json:"name"`
 	HabitType  int    `json:"habitType"`
 	Difficulty int    `json:"difficulty"`
@@ -64,4 +64,10 @@ type AdminHabitsReport struct {
 	PerRange   Ranges     `json:"perRange"`
 	WorstHabit HabitOwner `json:"worstHabit"`
 	BestHabit  HabitOwner `json:"bestHabit"`
+}
+
+type UserData struct {
+	Success bool   `json:"success"`
+	Email   string `json:"email"`
+	Name    string `json:"name"`
 }

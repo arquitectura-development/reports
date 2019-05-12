@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"gorilla/mux"
 	"log"
+	"math"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	types "arqui-reports/types"
@@ -190,15 +192,90 @@ func adminHabitsReport(w http.ResponseWriter, r *http.Request) {
 	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
 	} else {
-		adminHabitsReportJSON, err := json.Marshal(sampleAdminHabitsReport)
-		if err != nil {
-			log.Println(err)
-		}
 
 		habits := []types.Habit{}
 		getJSON("https://arquitectura-habits.herokuapp.com/admin/habits?userId=0", &habits)
 		log.Println(habits)
 
+		countRed := 0
+		countOrange := 0
+		countYellow := 0
+		countGreen := 0
+		countBlue := 0
+		highestScoreUserID := -1
+		lowestScoreUserID := -1
+		highestScoreName := ""
+		lowestScoreName := ""
+		highestScore := math.Inf(-1)
+		lowestScore := math.Inf(1)
+
+		for _, habit := range habits {
+			if float64(habit.Score) < lowestScore {
+				lowestScore = float64(habit.Score)
+				lowestScoreUserID = habit.UserID
+				lowestScoreName = habit.Name
+			}
+			if float64(habit.Score) > highestScore {
+				highestScore = float64(habit.Score)
+				highestScoreUserID = habit.UserID
+				highestScoreName = habit.Name
+			}
+
+			if habit.Score < 0 {
+				countRed++
+			} else if habit.Score >= 0 && habit.Score < 10 {
+				countOrange++
+			} else if habit.Score >= 10 && habit.Score < 40 {
+				countYellow++
+			} else if habit.Score >= 40 && habit.Score < 50 {
+				countGreen++
+			} else if habit.Score >= 50 {
+				countBlue++
+			}
+		}
+
+		worstHabit := types.HabitOwner{}
+		if lowestScoreUserID != -1 {
+			userData := types.UserData{}
+			getJSON("https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId="+strconv.Itoa(lowestScoreUserID), &userData)
+			log.Println(userData)
+			worstHabit.Name = lowestScoreName
+			worstHabit.Username = userData.Name
+		} else {
+			worstHabit.Name = ""
+			worstHabit.Username = ""
+		}
+
+		bestHabit := types.HabitOwner{}
+		if lowestScoreUserID != -1 {
+			userData := types.UserData{}
+			url := "https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId=" + strconv.Itoa(highestScoreUserID)
+			log.Println(url)
+			getJSON(url, &userData)
+			log.Println(userData)
+			bestHabit.Name = highestScoreName
+			bestHabit.Username = userData.Name
+		} else {
+			bestHabit.Name = ""
+			bestHabit.Username = ""
+		}
+
+		var response = types.AdminHabitsReport{
+			BestHabit:  bestHabit,
+			WorstHabit: worstHabit,
+			PerRange: types.Ranges{
+				Red:    countRed,
+				Orange: countOrange,
+				Yellow: countYellow,
+				Green:  countGreen,
+				Blue:   countBlue,
+			},
+		}
+
+		adminHabitsReportJSON, err := json.Marshal(response)
+		if err != nil {
+			log.Println(err)
+		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(adminHabitsReportJSON)
