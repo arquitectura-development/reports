@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"arqui-reports/reports"
 	"arqui-reports/types"
 	"encoding/json"
 	"log"
@@ -34,7 +35,7 @@ func UserReportHandler(w http.ResponseWriter, r *http.Request) {
 
 		response := types.UserReport{}
 
-		ProcessUserReport(tasks, habits, &response)
+		reports.ProcessUserReport(tasks, habits, &response)
 
 		userReportJSON, err := json.Marshal(response)
 		if err != nil {
@@ -58,7 +59,7 @@ func AdminTasksReport(w http.ResponseWriter, r *http.Request) {
 		getJSON("https://habittonapigateway.herokuapp.com/admin/tasks/?userId=0", &tasks)
 
 		response := types.AdminTasksReport{}
-		ProcessAdminTasks(tasks, &response)
+		reports.ProcessAdminTasks(tasks, &response)
 
 		adminTasksReportJSON, err := json.Marshal(response)
 		if err != nil {
@@ -85,7 +86,7 @@ func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		highestTemp := types.UserHabitTemp{UserID: -1}
 		ranges := types.Ranges{}
 
-		ProcessAdminHabitsWithoutNames(habits, &ranges, &lowestTemp, &highestTemp)
+		reports.ProcessAdminHabitsWithoutNames(habits, &ranges, &lowestTemp, &highestTemp)
 
 		worstHabit := types.HabitOwner{}
 		if lowestTemp.UserID != -1 {
