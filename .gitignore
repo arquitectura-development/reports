@@ -1,28 +1,21 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
 
-# Test binary, build with `go test -c`
-*.test
+# Created by https://www.gitignore.io/api/sonarqube
+# Edit at https://www.gitignore.io/?templates=sonarqube
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
+### SonarQube ###
+# SonarQube ignore files.
+#
+# https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
+# Sonar Scanner working directories
+.sonar/
+.scannerwork/
 
-*~
+# http://www.sonarlint.org/commandline/
+# SonarLint working directories, configuration files (including credentials)
+.sonarlint/
 
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
+# End of https://www.gitignore.io/api/sonarqube
 
-# KDE directory preferences
-.directory
+# Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-.env

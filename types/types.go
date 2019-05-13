@@ -71,3 +71,8 @@ type UserData struct {
 	Email   string `json:"email"`
 	Name    string `json:"name"`
 }
+
+type UserHabitTemp struct {
+	UserID    int    `json:"userId"`
+	HabitName string `json:"habitName"`
+}
