@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+var userID = "userId"
+
 func TestAliveHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
@@ -27,7 +29,7 @@ func TestAdminHabitsReportValid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "0")
+	q.Add(userID, "0")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
@@ -46,7 +48,7 @@ func TestAdminHabitsReportInvalid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "1")
+	q.Add(userID, "1")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
@@ -64,7 +66,7 @@ func TestAdminTasksReportValid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "0")
+	q.Add(userID, "0")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
@@ -82,7 +84,7 @@ func TestAdminTasksReportInvalid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "1")
+	q.Add(userID, "1")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
@@ -100,7 +102,7 @@ func TestUserReportValid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "1")
+	q.Add(userID, "1")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
@@ -118,7 +120,7 @@ func TestUserHandlerInvalid(t *testing.T) {
 		t.Fatal(err)
 	}
 	q := req.URL.Query()
-	q.Add("userId", "")
+	q.Add(userID, "")
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()

@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+var doCleanCode = "Do Clean Code"
+var bullyKids = "Bully kids"
+var taskForToday = "Task for today"
+var delayedTask = "Delayed task"
+var veryDistantFutureTask = "Very distant future task"
+
 var layout = "02/01/2006"
 var todayDateString = time.Now().Format(layout)
 var pastDateString = time.Now().AddDate(0, 0, -1).Format(layout)
@@ -25,7 +31,7 @@ var habitsSample = []types.Habit{
 	types.Habit{
 		ID:         2,
 		UserID:     1,
-		Name:       "Do Clean Code",
+		Name:       doCleanCode,
 		HabitType:  1,
 		Difficulty: 2,
 		Score:      140,
@@ -34,7 +40,7 @@ var habitsSample = []types.Habit{
 	types.Habit{
 		ID:         7,
 		UserID:     1,
-		Name:       "Bully kids",
+		Name:       bullyKids,
 		HabitType:  2,
 		Difficulty: 1,
 		Score:      -10,
@@ -51,108 +57,19 @@ var habitsSample = []types.Habit{
 	},
 }
 
-var habitsSampleAdmin = []types.Habit{
-	types.Habit{
-		ID:         1,
-		UserID:     1,
-		Name:       "Program in Kotlin",
-		HabitType:  1,
-		Difficulty: 3,
-		Score:      15,
-		Color:      3,
-	},
+var habitsSampleAdmin = append(habitsSample,
 	types.Habit{
 		ID:         10,
-		UserID:     1,
+		UserID:     2,
 		Name:       "Program in Kotlin2",
 		HabitType:  1,
 		Difficulty: 3,
 		Score:      9,
 		Color:      2,
 	},
-	types.Habit{
-		ID:         2,
-		UserID:     1,
-		Name:       "Do Clean Code",
-		HabitType:  1,
-		Difficulty: 2,
-		Score:      140,
-		Color:      5,
-	},
-	types.Habit{
-		ID:         7,
-		UserID:     2,
-		Name:       "Bully kids",
-		HabitType:  2,
-		Difficulty: 1,
-		Score:      -10,
-		Color:      1,
-	},
-	types.Habit{
-		ID:         141,
-		UserID:     1,
-		Name:       "Do things",
-		HabitType:  3,
-		Difficulty: 1,
-		Score:      70,
-		Color:      5,
-	},
-}
+)
 
 var tasksSample = []types.Task{
-	types.Task{
-		ID:             8,
-		UserID:         1,
-		Title:          "task done",
-		Description:    "desc",
-		DueDate:        todayDateString,
-		Reminder:       "",
-		Done:           true,
-		CompletionDate: pastDateString,
-	},
-	types.Task{
-		ID:             9,
-		UserID:         1,
-		Title:          "task for today",
-		Description:    "do stuff today",
-		DueDate:        todayDateString,
-		Reminder:       "",
-		Done:           false,
-		CompletionDate: "",
-	},
-	types.Task{
-		ID:             9,
-		UserID:         1,
-		Title:          "task for tomorrow",
-		Description:    "",
-		DueDate:        tomorrowDateString,
-		Reminder:       "",
-		Done:           false,
-		CompletionDate: "",
-	},
-	types.Task{
-		ID:             9,
-		UserID:         1,
-		Title:          "delayed task",
-		Description:    "",
-		DueDate:        pastDateString,
-		Reminder:       "",
-		Done:           false,
-		CompletionDate: "",
-	},
-	types.Task{
-		ID:             9,
-		UserID:         1,
-		Title:          "very distant future task",
-		Description:    "",
-		DueDate:        futureDateString,
-		Reminder:       "",
-		Done:           false,
-		CompletionDate: "",
-	},
-}
-
-var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             1,
 		UserID:         1,
@@ -166,8 +83,8 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             2,
 		UserID:         1,
-		Title:          "task for today",
-		Description:    "do stuff today",
+		Title:          taskForToday,
+		Description:    "",
 		DueDate:        todayDateString,
 		Reminder:       "",
 		Done:           false,
@@ -186,7 +103,7 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             4,
 		UserID:         1,
-		Title:          "delayed task",
+		Title:          delayedTask,
 		Description:    "",
 		DueDate:        pastDateString,
 		Reminder:       "",
@@ -196,17 +113,20 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             5,
 		UserID:         1,
-		Title:          "very distant future task",
+		Title:          veryDistantFutureTask,
 		Description:    "",
 		DueDate:        futureDateString,
 		Reminder:       "",
 		Done:           false,
 		CompletionDate: "",
 	},
+}
+
+var tasksSampleAdmin = append(tasksSample,
 	types.Task{
 		ID:             15,
 		UserID:         2,
-		Title:          "very distant future task",
+		Title:          veryDistantFutureTask,
 		Description:    "",
 		DueDate:        futureDateString,
 		Reminder:       "",
@@ -216,7 +136,7 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             25,
 		UserID:         3,
-		Title:          "very distant future task",
+		Title:          veryDistantFutureTask,
 		Description:    "",
 		DueDate:        futureDateString,
 		Reminder:       "",
@@ -226,8 +146,8 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             12,
 		UserID:         2,
-		Title:          "task for today",
-		Description:    "do stuff today",
+		Title:          taskForToday,
+		Description:    "",
 		DueDate:        todayDateString,
 		Reminder:       "",
 		Done:           false,
@@ -236,7 +156,7 @@ var tasksSampleAdmin = []types.Task{
 	types.Task{
 		ID:             14,
 		UserID:         2,
-		Title:          "delayed task",
+		Title:          delayedTask,
 		Description:    "",
 		DueDate:        pastDateString,
 		Reminder:       "",
@@ -253,7 +173,7 @@ var tasksSampleAdmin = []types.Task{
 		Done:           true,
 		CompletionDate: todayDateString,
 	},
-}
+)
 
 func TestProcessUserReport(t *testing.T) {
 
@@ -323,10 +243,10 @@ func TestProcessAdminHabitsWithoutNames(t *testing.T) {
 	if ranges.Blue != 2 {
 		t.Error("Error on blue habits qty")
 	}
-	if lowestTemp.HabitName != "Bully kids" && lowestTemp.UserID != 2 {
+	if lowestTemp.HabitName != bullyKids && lowestTemp.UserID != 2 {
 		t.Error("Error obtaining lowest score habit")
 	}
-	if highestTemp.HabitName != "Do Clean Code" && highestTemp.UserID != 1 {
+	if highestTemp.HabitName != doCleanCode && highestTemp.UserID != 1 {
 		t.Error("Error obtaining highest score habit")
 	}
 }

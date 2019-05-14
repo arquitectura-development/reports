@@ -27,18 +27,16 @@ func ProcessUserReport(tasks []types.Task, habits []types.Habit, response *types
 	if err != nil {
 		log.Panicln(err)
 	}
+
 	for _, task := range tasks {
 		if !task.Done {
 			dueDateString := task.DueDate
 			dueDate, err := time.Parse(layout, dueDateString)
 			if err != nil {
 				log.Panicln(err)
-			}
-
-			if dueDate.Equal(todayDate) {
+			} else if dueDate.Equal(todayDate) {
 				tasksToday = append(tasksToday, task)
-			}
-			if dueDate.Before(todayDate) {
+			} else if dueDate.Before(todayDate) {
 				tasksDelayed = append(tasksDelayed, task)
 			}
 		}

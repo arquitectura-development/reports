@@ -21,8 +21,17 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 
+func getUserID(r *http.Request) string {
+	return r.URL.Query().Get("userId")
+}
+
+func setOkContentJSON(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+
 func UserReportHandler(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("userId")
+	userID := getUserID(r)
 	if userID == "" {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -42,14 +51,13 @@ func UserReportHandler(w http.ResponseWriter, r *http.Request) {
 			log.Panicln(err)
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+		setOkContentJSON(w)
 		w.Write(userReportJSON)
 	}
 }
 
 func AdminTasksReport(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("userId")
+	userID := getUserID(r)
 	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -65,15 +73,14 @@ func AdminTasksReport(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Panicln(err)
 		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+		setOkContentJSON(w)
 		w.Write(adminTasksReportJSON)
 	}
 
 }
 
 func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
-	userID := r.URL.Query().Get("userId")
+	userID := getUserID(r)
 	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
@@ -90,7 +97,7 @@ func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
 
 		worstHabit := types.HabitOwner{}
 		if lowestTemp.UserID != -1 {
-			userData := types.UserData{}
+			userData := types.UserData{Name: "Deleted User"}
 			getJSON("https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId="+strconv.Itoa(lowestTemp.UserID), &userData)
 			worstHabit.Name = lowestTemp.HabitName
 			worstHabit.Username = userData.Name
@@ -101,7 +108,7 @@ func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
 
 		bestHabit := types.HabitOwner{}
 		if highestTemp.UserID != -1 {
-			userData := types.UserData{}
+			userData := types.UserData{Name: "Deleted User"}
 			getJSON("https://habittonapigateway.herokuapp.com/admin/users/name?userId=0&searchUserId="+strconv.Itoa(highestTemp.UserID), &userData)
 			bestHabit.Name = highestTemp.HabitName
 			bestHabit.Username = userData.Name
@@ -120,12 +127,11 @@ func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Panicln(err)
 		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
+		setOkContentJSON(w)
 		w.Write(adminHabitsReportJSON)
 	}
 }
 
-func AliveHandler(w http.ResponseWriter, r *http.Request) {
+func AliveHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
