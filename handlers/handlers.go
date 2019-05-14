@@ -56,7 +56,7 @@ func UserReportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func AdminTasksReport(w http.ResponseWriter, r *http.Request) {
+func AdminTasksReportHandler(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
@@ -79,7 +79,7 @@ func AdminTasksReport(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func AdminHabitsReport(w http.ResponseWriter, r *http.Request) {
+func AdminHabitsReportHandler(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	if userID != "0" {
 		w.WriteHeader(http.StatusForbidden)
