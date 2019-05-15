@@ -33,7 +33,7 @@ func TestAdminHabitsReportValid(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(AdminHabitsReport)
+	handler := http.HandlerFunc(AdminHabitsReportHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -52,7 +52,7 @@ func TestAdminHabitsReportInvalid(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(AdminHabitsReport)
+	handler := http.HandlerFunc(AdminHabitsReportHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusForbidden {
@@ -70,7 +70,7 @@ func TestAdminTasksReportValid(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(AdminTasksReport)
+	handler := http.HandlerFunc(AdminTasksReportHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusOK {
@@ -88,7 +88,7 @@ func TestAdminTasksReportInvalid(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(AdminTasksReport)
+	handler := http.HandlerFunc(AdminTasksReportHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusForbidden {

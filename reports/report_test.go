@@ -14,6 +14,7 @@ var veryDistantFutureTask = "Very distant future task"
 
 var layout = "02/01/2006"
 var todayDateString = time.Now().Format(layout)
+var todayDateStringTest = "14/05/2019"
 var pastDateString = time.Now().AddDate(0, 0, -1).Format(layout)
 var tomorrowDateString = time.Now().AddDate(0, 0, 1).Format(layout)
 var futureDateString = time.Now().AddDate(1, 0, 1).Format(layout)

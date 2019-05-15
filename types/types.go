@@ -1,13 +1,13 @@
 package types
 
 type Habit struct {
-	ID         int    `json:"id"`
-	UserID     int    `json:"userID"`
-	Name       string `json:"name"`
-	HabitType  int    `json:"habitType"`
-	Difficulty int    `json:"difficulty"`
-	Score      int    `json:"score"`
-	Color      int    `json:"color"`
+	ID         int     `json:"id"`
+	UserID     int     `json:"userID"`
+	Name       string  `json:"name"`
+	HabitType  int     `json:"habitType"`
+	Difficulty int     `json:"difficulty"`
+	Score      float64 `json:"score"`
+	Color      int     `json:"color"`
 }
 
 type Task struct {
